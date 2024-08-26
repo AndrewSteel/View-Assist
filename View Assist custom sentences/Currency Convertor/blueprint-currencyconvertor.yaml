@@ -41,12 +41,12 @@ trigger:
 condition: []
 action:
   - variables:
-      group_entity: !input group_entity
       rapidapikey: !input rapid_apikey
-      view: !input view_path
       tts_device: !input tts_device
       tts_language: !input tts_language
       tts_model: !input tts_model
+      group_entity: !input group_entity
+      view: !input view_path
       target_satellite_device: |-
         {% for sat in expand(group_entity) %}
           {% if (device_id(sat.attributes.mic_device) in trigger.payload_json['devices'] ) or (device_id(sat.attributes.display_device) in trigger.payload_json['devices'] ) %}
@@ -103,13 +103,13 @@ action:
                       basecurrency: "{{ conversion_response['data']['from'] }}"
                       exchange: "{{ conversion_response['data']['value'] | round(2) }}"
                       exchangecurrency: "{{ conversion_response['data']['to'] }}"
-                    response_variable: response_speech
+                    response_variable: response_screen
                   - action: python_script.set_state
                     data:
                       entity_id: "{{ target_satellite_device }}"
                       title: Currency Convertor
                       message_font_size: 4vw
-                      message: "{{ response_speech['message'] }}"
+                      message: "{{ response_screen['message'] }}"
                     enabled: true
                   - data:
                       path: "{{ view }}"
@@ -195,12 +195,12 @@ action:
                       fromcurrency: "{{ conversion_response['data']['from'] }}"
                       convert: "{{ conversion_response['data']['value'] | round(2) }}"
                       tocurrency: "{{ conversion_response['data']['to'] }}"
-                    response_variable: response_speech
+                    response_variable: response_screen
                   - data:
                       entity_id: "{{ target_satellite_device }}"
                       title: Currency Convertor
                       message_font_size: 4vw
-                      message: "{{ response_speech['message'] }}"
+                      message: "{{ response_screen['message'] }}"
                     action: python_script.set_state
                   - data:
                       path: "{{ view }}"
