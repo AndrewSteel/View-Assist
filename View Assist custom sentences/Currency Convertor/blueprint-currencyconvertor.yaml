@@ -86,12 +86,8 @@ action:
                 data:
                   media_content_id: >-
                     media-source://tts/{{
-                    tts_device}}
-                    ?message={{
-                    response_speech['message'] | replace(" ", "+")}}
-                    &language={{
-                    tts_language}}
-                    &voice={{tts_model}}
+                    tts_device}}?message={{response_speech['message'] | replace(" ", "+")}}&language={{
+                    tts_language}}&voice={{tts_model}}
                   media_content_type: provider
                 enabled: true
               - if:
@@ -120,13 +116,8 @@ action:
                 data:
                   media_content_id: >-
                     media-source://tts/{{
-                    tts_device}}
-                    ?message={{
-                    Error+{{conversion_response['error']}}+Message+{{
-                    conversion_response['message']}}
-                    &language={{
-                    tts_language}}
-                    &voice={{tts_model}}
+                    tts_device}}?message=Error+{{conversion_response['error']}}+Message+{{
+                    conversion_response['message']}}&language={{tts_language}}&voice={{tts_model}}
                   media_content_type: provider
                 enabled: true
               - if:
@@ -177,12 +168,8 @@ action:
                 data:
                   media_content_id: >-
                     media-source://tts/{{
-                    tts_device}}
-                    ?message={{
-                    response_speech['message'] | replace(" ", "+")}}
-                    &language={{
-                    tts_language}}
-                    &voice={{tts_model}}
+                    tts_device}}?message={{response_speech['message'] | replace(" ", "+")}}&language={{
+                    tts_language}}&voice={{tts_model}}
                   media_content_type: provider
                 enabled: true
               - if:
@@ -210,13 +197,8 @@ action:
                 data:
                   media_content_id: >-
                     media-source://tts/{{
-                    tts_device}}
-                    ?message={{
-                    Error+{{conversion_response['error']}}+Message+{{
-                    conversion_response['message']}}
-                    &language={{
-                    tts_language}}
-                    &voice={{tts_model}}
+                    tts_device}}?message=Error+{{conversion_response['error']}}+Message+{{
+                    conversion_response['message']}}&language={{tts_language}}&voice={{tts_model}}
                   media_content_type: provider
                 enabled: true
               - if:
