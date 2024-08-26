@@ -8,7 +8,7 @@ ConvertCurrency:
         payload: >-
           {"intent": "convert",
            "fromcurrency": "{{ fromcurrency }}",
-           "tocurrency": "{{ tocurrency }}"
+           "tocurrency": "{{ tocurrency }}",
            "devices": "{{ area_devices(area) }}"
           }
 ExchangeCurrency:

@@ -159,7 +159,7 @@ action:
                   custom: viewassist-currencyconvertor
                   amount: "{{ conversion_response['data']['amount'] }}"
                   fromcurrency: "{{ conversion_response['data']['from'] }}"
-                  convert: "{{ conversion_response['data']['value'] }}"
+                  convert: "{{ conversion_response['data']['value'] | round(2) }}"
                   tocurrency: "{{ conversion_response['data']['to'] }}"
                 response_variable: response_speech
               - action: media_player.play_media
