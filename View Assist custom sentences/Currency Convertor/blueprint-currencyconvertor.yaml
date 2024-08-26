@@ -76,9 +76,8 @@ action:
                   intent: ExchangeCurrency
                   response: speech
                   custom: viewassist-currencyconvertor
-                  basecurrency: "{{ conversion_response['data']['from'] }}"
                   exchange: "{{ conversion_response['data']['value'] | round(2) }}"
-                  exchangecurrency: "{{ conversion_response['data']['to'] }}"
+                  exchangecurrency: "{{ trigger.payload_json['tocurrency'] }}"
                 response_variable: response_speech
               - action: media_player.play_media
                 target:
@@ -96,6 +95,15 @@ action:
                       {% if target_satellite_device_type != 'audio_only'
                       %}true{% else %}false{% endif %}
                 then:
+                  - action: pyscript.response_handler
+                    data:
+                      intent: ExchangeCurrency
+                      response: screen
+                      custom: viewassist-currencyconvertor
+                      basecurrency: "{{ conversion_response['data']['from'] }}"
+                      exchange: "{{ conversion_response['data']['value'] | round(2) }}"
+                      exchangecurrency: "{{ conversion_response['data']['to'] }}"
+                    response_variable: response_speech
                   - action: python_script.set_state
                     data:
                       entity_id: "{{ target_satellite_device }}"
@@ -158,9 +166,9 @@ action:
                   response: speech
                   custom: viewassist-currencyconvertor
                   amount: "{{ conversion_response['data']['amount'] }}"
-                  fromcurrency: "{{ conversion_response['data']['from'] }}"
+                  fromcurrency: "{{ trigger.payload_json['fromcurrency'] }}"
                   convert: "{{ conversion_response['data']['value'] | round(2) }}"
-                  tocurrency: "{{ conversion_response['data']['to'] }}"
+                  tocurrency: "{{ trigger.payload_json['tocurrency'] }}"
                 response_variable: response_speech
               - action: media_player.play_media
                 target:
@@ -178,6 +186,16 @@ action:
                       {% if target_satellite_device_type != 'audio_only'
                       %}true{% else %}false{% endif %}
                 then:
+                  - action: pyscript.response_handler
+                    data:
+                      intent: ConvertCurrency
+                      response: screen
+                      custom: viewassist-currencyconvertor
+                      amount: "{{ conversion_response['data']['amount'] }}"
+                      fromcurrency: "{{ conversion_response['data']['from'] }}"
+                      convert: "{{ conversion_response['data']['value'] | round(2) }}"
+                      tocurrency: "{{ conversion_response['data']['to'] }}"
+                    response_variable: response_speech
                   - data:
                       entity_id: "{{ target_satellite_device }}"
                       title: Currency Convertor

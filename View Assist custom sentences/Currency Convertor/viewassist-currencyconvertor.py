@@ -1,4 +1,4 @@
-import requests
+import requests, re
 
 #
 # https://pyyaml.org/wiki/PyYAMLDocumentation
@@ -128,5 +128,5 @@ def currencyconvertor(rapidapikey=None, currencyfrom=None, currencyto=None):
     if r.status_code == requests.codes.ok:
         response_variable = r.json()
     else:
-        response_variable = {"error": r.status_code, "data": r.json()}
+        response_variable = {"error": r.status_code, "message": "Error request", "data": r.json()}
     return response_variable
