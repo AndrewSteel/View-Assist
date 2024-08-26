@@ -8,6 +8,18 @@ blueprint:
       name: Rapid Api Key
       description: Your Rapid Api Key
       default: YOURAPIKEY
+    tts_device:
+      name: Text to Speech Device
+      description: Your TTS Device to play media
+      default: tts.piper
+    tts_language:
+      name: Text to Speech language
+      description: Your preferred language for TTS
+      default: en_US
+    tts_model:
+      name: Text to Speech voice model
+      description: Your preferred voice model for TTS
+      default: en_US-amy-medium
     group_entity:
       name: Group Entity
       description: The group that holds the list of View Assist satellites(example
@@ -32,15 +44,19 @@ action:
       group_entity: !input group_entity
       rapidapikey: !input rapid_apikey
       view: !input view_path
+      tts_device: !input tts_device
+      tts_language: !input tts_language
+      tts_model: !input tts_model
       target_satellite_device: |-
         {% for sat in expand(group_entity) %}
-          {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
+          {% if (device_id(sat.attributes.mic_device) in trigger.payload_json['devices'] ) or (device_id(sat.attributes.display_device) in trigger.payload_json['devices'] ) %}
             {{ sat.entity_id }}
           {% endif %}
         {% endfor %}
       target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+    enabled: true
   - choose:
       - conditions:
           - condition: template
@@ -61,29 +77,58 @@ action:
                   response: speech
                   custom: viewassist-currencyconvertor
                   basecurrency: "{{ conversion_response['data']['from'] }}"
-                  exchange: "{{ conversion_response['data']['value'] }}"
+                  exchange: "{{ conversion_response['data']['value'] | round(2) }}"
                   exchangecurrency: "{{ conversion_response['data']['to'] }}"
                 response_variable: response_speech
-              - set_conversation_response: "{{ response_speech['message'] }}"
+              - action: media_player.play_media
+                target:
+                  entity_id: "{{target_mediaplayer_device}}"
+                data:
+                  media_content_id: >-
+                    media-source://tts/{{
+                    tts_device}}
+                    ?message={{
+                    response_speech['message'] | replace(" ", "+")}}
+                    &language={{
+                    tts_language}}
+                    &voice={{tts_model}}
+                  media_content_type: provider
+                enabled: true
               - if:
                   - condition: template
-                    value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+                    value_template: >-
+                      {% if target_satellite_device_type != 'audio_only'
+                      %}true{% else %}false{% endif %}
                 then:
-                  - data:
+                  - action: python_script.set_state
+                    data:
                       entity_id: "{{ target_satellite_device }}"
                       title: Currency Convertor
                       message_font_size: 4vw
                       message: "{{ response_speech['message'] }}"
-                    action: python_script.set_state
+                    enabled: true
                   - data:
                       path: "{{ view }}"
                       target:
                         device_id: "{{target_display_device}}"
                     action: browser_mod.navigate
+                enabled: true
             else:
-              - set_conversation_response: >-
-                  Error {{ conversion_response['error'] }} Message {{
-                  conversion_response['message'] }}
+              - action: media_player.play_media
+                target:
+                  entity_id: "{{target_mediaplayer_device}}"
+                data:
+                  media_content_id: >-
+                    media-source://tts/{{
+                    tts_device}}
+                    ?message={{
+                    Error+{{conversion_response['error']}}+Message+{{
+                    conversion_response['message']}}
+                    &language={{
+                    tts_language}}
+                    &voice={{tts_model}}
+                  media_content_type: provider
+                enabled: true
               - if:
                   - condition: template
                     value_template: "{{ target_satellite_device_type != 'audio_only' }}"
@@ -101,6 +146,7 @@ action:
                       target:
                         device_id: "{{target_display_device}}"
                     action: browser_mod.navigate
+                enabled: true
       - conditions:
           - condition: template
             value_template: "{{ trigger.payload_json['intent'] == 'convert'}}"
@@ -125,10 +171,25 @@ action:
                   convert: "{{ conversion_response['data']['value'] }}"
                   tocurrency: "{{ conversion_response['data']['to'] }}"
                 response_variable: response_speech
-              - set_conversation_response: "{{ response_speech['message'] }}"
+              - action: media_player.play_media
+                target:
+                  entity_id: "{{target_mediaplayer_device}}"
+                data:
+                  media_content_id: >-
+                    media-source://tts/{{
+                    tts_device}}
+                    ?message={{
+                    response_speech['message'] | replace(" ", "+")}}
+                    &language={{
+                    tts_language}}
+                    &voice={{tts_model}}
+                  media_content_type: provider
+                enabled: true
               - if:
                   - condition: template
-                    value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+                    value_template: >-
+                      {% if target_satellite_device_type != 'audio_only'
+                      %}true{% else %}false{% endif %}
                 then:
                   - data:
                       entity_id: "{{ target_satellite_device }}"
@@ -141,10 +202,23 @@ action:
                       target:
                         device_id: "{{target_display_device}}"
                     action: browser_mod.navigate
+                enabled: true
             else:
-              - set_conversation_response: >-
-                  Error {{ conversion_response['error'] }} Message {{
-                  conversion_response['message'] }}
+              - action: media_player.play_media
+                target:
+                  entity_id: "{{target_mediaplayer_device}}"
+                data:
+                  media_content_id: >-
+                    media-source://tts/{{
+                    tts_device}}
+                    ?message={{
+                    Error+{{conversion_response['error']}}+Message+{{
+                    conversion_response['message']}}
+                    &language={{
+                    tts_language}}
+                    &voice={{tts_model}}
+                  media_content_type: provider
+                enabled: true
               - if:
                   - condition: template
                     value_template: "{{ target_satellite_device_type != 'audio_only' }}"
@@ -162,6 +236,5 @@ action:
                       target:
                         device_id: "{{target_display_device}}"
                     action: browser_mod.navigate
+                enabled: true
 mode: single
-
-

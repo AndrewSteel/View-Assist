@@ -9,6 +9,7 @@ ConvertCurrency:
           {"intent": "convert",
            "fromcurrency": "{{ fromcurrency }}",
            "tocurrency": "{{ tocurrency }}"
+           "devices": "{{ area_devices(area) }}"
           }
 ExchangeCurrency:
   action:
@@ -19,5 +20,6 @@ ExchangeCurrency:
         retain: false
         payload: >-
           {"intent": "exchange",
-           "tocurrency": "{{ tocurrency }}"
+           "tocurrency": "{{ tocurrency }}",
+           "devices": "{{ area_devices(area) }}"
           }

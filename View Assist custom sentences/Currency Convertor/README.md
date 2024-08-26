@@ -11,8 +11,6 @@ Prequisites:
 * Download
   * 'viewassist-currencyconvertor.py'
   * 'viewassist-response_handler.py'
-  * 'viewassist_currencyconvertor_currencies.en.yaml'
-  * 'viewassist_currencyconvertor_currencies.de.yaml'
   * 'viewassist_currencyconvertor_digits.yaml'
   and place this files in your 'pyscripts' directory on your Home Assistant server
 * If not exist create a directory 'intent_script' in your 'config' directory on your Home Assistant server.
@@ -22,4 +20,5 @@ Prequisites:
 * Download the
   * 'viewassist_currencyconvertor_intent.yaml'
   * 'viewassist_currencyconvertor_response.yaml'
+  * 'viewassist_currencyconvertor_currencies.yaml'
   files from your preferred language directory (esp. 'en') and place this files in the corresponding language directory on your Home Assistant server.

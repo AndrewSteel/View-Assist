@@ -1,4 +1,4 @@
-import requests,re
+import requests
 
 #
 # https://pyyaml.org/wiki/PyYAMLDocumentation
@@ -77,7 +77,7 @@ def currencyconvertor(rapidapikey=None, currencyfrom=None, currencyto=None):
     """ 
 
     # localization: use prefered language from hass object
-    currencyfile = "/config/pyscript/viewassist-currencyconvertor.currencies." + hass.config.language + ".yaml"
+    currencyfile = "/config/custom_sentences/"+ hass.config.language + "/viewassist-currencyconvertor.currencies.yaml"
     digitfile = "/config/pyscript/viewassist-currencyconvertor.digits.yaml"
     
     # if currencyfrom is None, then intend is "exchange" and get preferred currency from hass object
