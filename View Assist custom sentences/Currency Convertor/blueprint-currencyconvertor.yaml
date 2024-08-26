@@ -166,7 +166,7 @@ action:
                   response: speech
                   custom: viewassist-currencyconvertor
                   amount: "{{ conversion_response['data']['amount'] }}"
-                  fromcurrency: "{{ trigger.payload_json['fromcurrency'] }}"
+                  fromcurrency: "{{ trigger.payload_json['fromcurrency'].split(' ',2)[1] }}"
                   convert: "{{ conversion_response['data']['value'] | round(2) }}"
                   tocurrency: "{{ trigger.payload_json['tocurrency'] }}"
                 response_variable: response_speech
